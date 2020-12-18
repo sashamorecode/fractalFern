@@ -11,6 +11,8 @@ import numpy as np
 import imageio
 import matplotlib.pyplot as plt
 import matplotlib.image as mpimg
+import pandas as pd
+
 def rgb2gray(rgb):
     r, g, b = rgb[:,:,0], rgb[:,:,1], rgb[:,:,2]
     gray = 0.2989 * r + 0.5870 * g + 0.1140 * b
@@ -55,8 +57,20 @@ def fractal_dimension(Z, threshold=0.5):
     counts = []
     for size in sizes:
         counts.append(boxcount(Z, size))
-    print(counts)
-    print(sizes)
+
+    #output raw data
+
+    #Data = []
+    #for x in range(0,len(counts)):
+    #   Data.append((sizes[x],counts[x]))
+    #print(Data)
+    Data = {'size' : sizes, 
+            'count' : counts
+            }
+    df = pd.DataFrame(Data, columns = ['size','count'])
+    print(df)
+    df.to_csv (r'D:\python-playground\fractal\FractalData%d.csv'%len(Z), index = False, header=True)
+    
     # Fit the successive log(sizes) with log (counts)
     coeffs = np.polyfit(np.log(sizes), np.log(counts), 1)
     plt.plot(np.log(sizes),np.log(counts), 'o', mfc='none')
